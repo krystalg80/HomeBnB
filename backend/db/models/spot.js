@@ -1,13 +1,12 @@
 
 const { Model, DataTypes } = require('sequelize');
-// const sequelize = require('../../config/database.js'); 
 
 
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
       // define association here
-      Spot.belongsTo(models.User, { as: 'Owner', foreignKey: 'ownerId' });
+      Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
     }
   }
   Spot.init(
@@ -15,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       ownerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          key: 'id',
+          model: 'Users'
+        }
       },
       address: {
         type: DataTypes.STRING,
@@ -70,4 +73,3 @@ module.exports = (sequelize, DataTypes) => {
   return Spot;
 };
 
-// module.exports = Spot;
