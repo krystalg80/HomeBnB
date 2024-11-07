@@ -52,7 +52,10 @@ module.exports = {
       },
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: true //cannot be emptyyy
+        }
       },
       createdAt: {
         allowNull: false,
