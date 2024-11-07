@@ -15,14 +15,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 30] //ensuring the first name is atleast a character, or however length we want it to be!
+          len: [1, 30], //ensuring the first name is atleast a character, or however length we want it to be!
+          isAlpha: {
+            msg: 'First name must contain only letters.',
+          }
         }
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 30] //same thing as first name, last name is required of atleast a charecter or however length
+          len: [1, 30], //same thing as first name, last name is required of atleast a charecter or however length
+          isAlpha: {
+            msg: 'Last name must contain only letters.',
+          }
         }
       },
       username: {

@@ -38,7 +38,7 @@ module.exports = {
         unique: true,
         validate: {
           notEmpty: true,
-          len: [5, 30] //Not sure what length to set it, but maybe username has to be atleast 5 characters?
+          len: [4, 30] //Not sure what length to set it, but maybe username has to be atleast 5 characters?
         }
       },
       email: {
