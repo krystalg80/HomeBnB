@@ -13,11 +13,17 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          len: [1, 30] //ensuring the first name is atleast a character, or however length we want it to be!
+        }
       },
       lastName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          len: [1, 30] //same thing as first name, last name is required of atleast a charecter or however length
+        }
       },
       username: {
         type: DataTypes.STRING,
