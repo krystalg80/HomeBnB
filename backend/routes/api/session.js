@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { User } = require('../../db/models');
+const { User, Spot } = require('../../db/models');
 const router = express.Router();
 
 
@@ -88,5 +88,12 @@ router.get(
     } else return res.json({ user: null });
   }
 );
+
+// Get spots owned by the current user
+router.get('/spots', async (req, res) => {
+  const userId = req.user.id;
+  const spots = await Spot.findAll({ where: { ownerId: userId } });
+  res.status(200).json({ Spots: spots });
+});
 
 module.exports = router;
