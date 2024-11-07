@@ -11,11 +11,15 @@ const validateSignup = [
   check('firstName')
     .exists({ checkFalsy: true })
     .isLength({ min: 3 })
-    .withMessage('Please provide a first name.'),
+    .withMessage('Please provide a first name.')
+    .isAlpha()
+    .withMessage('First name must contain only letters.'),
   check('lastName')
     .exists({ checkFalsy: true })
     .isLength({ min: 3 })
-    .withMessage('Please provide a last name.'),
+    .withMessage('Please provide a last name.')
+    .isAlpha()
+    .withMessage('Last name must contain only letters.'),
   check('email')
     .exists({ checkFalsy: true })
     .isEmail()
