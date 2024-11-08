@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot } = require('../../db/models'); 
+const { Spot, SpotImage } = require('../../db/models'); 
 const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -214,5 +214,72 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
     });
   }
 });
+
+// Get all Spot Images based on the Spot's id
+router.get('/:spotId/images', async (req, res) => {
+  const { spotId } = req.params;
+
+  try {
+    // Find images associated with the given spotId
+    const images = await SpotImage.findAll({
+      where: { spotId },
+      attributes: ['id', 'url', 'preview', 'createdAt', 'updatedAt']
+    });
+
+    // If no images are found, return a 404 response
+    if (!images || images.length === 0) {
+      return res.status(404).json({
+        message: 'No images found for this spot'
+      });
+    }
+
+    // Return the list of images for the spot
+    return res.status(200).json(images);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: 'Failed to retrieve images'
+    });
+  }
+});
+
+// Add an Image to a Spot based on the Spot's id
+router.post('/:spotId/images', requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const { url, preview } = req.body;
+  const user = req.user;
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+      return res.status(404).json({
+        message: 'Spot could not be found'
+      });
+    }
+
+    if (spot.ownerId !== user.id) {
+      return res.status(403).json({
+        message: 'Not authorized'
+      });
+    }
+
+    const spotImage = await SpotImage.create({
+      spotId: spot.id,
+      url,
+      preview
+    });
+
+    return res.status(201).json({
+      id: spotImage.id,
+      url: spotImage.url,
+      preview: spotImage.preview,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to add image'
+    });
+  }
+})
 
 module.exports = router;
