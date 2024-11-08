@@ -53,17 +53,20 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
   });
 
-//connections is this correct? based off of our diagram
-  Review.associate = function(models) {
-    // One Review belongs to a User
-    Review.belongsTo(models.User, { foreignKey: 'userId' });
+//connections is this correct? based off of our diagram. Saw something online saying we have to connect them in here
+//feel free to edit/confirm!
+//sequelize relationships / associations examples :
 
-    // One Review belongs to a Spot
-    Review.belongsTo(models.Spot, { foreignKey: 'spotId' });
+//   Review.associate = function(models) {
+//     // One Review belongs to a User
+//     Review.belongsTo(models.User, { foreignKey: 'userId' });
 
-    // One Review can have many ReviewImages
-    Review.hasMany(models.ReviewImage, { foreignKey: 'reviewId', onDelete: 'CASCADE' });
-  };
+//     // One Review belongs to a Spot
+//     Review.belongsTo(models.Spot, { foreignKey: 'spotId' });
+
+//     // //I believe this would be something for our review images One Review can have many ReviewImages
+//     // Review.hasMany(models.ReviewImage, { foreignKey: 'reviewId', onDelete: 'CASCADE' });
+//   };
 
   return Review;
 };
