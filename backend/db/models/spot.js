@@ -78,6 +78,10 @@ module.exports = (sequelize, DataTypes) => {
       avgRating: {
         type: DataTypes.FLOAT,
         allowNull: true,
+        validate: {
+          min: 0,
+          max: 5        //rating must be between 0 and 5
+        }
       },
       previewImage: {
         type: DataTypes.STRING,
