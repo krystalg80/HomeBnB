@@ -5,7 +5,8 @@ const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const validateSpot = [
+
+const validateCreateSpot = [
   check('address')
     .notEmpty()
     .withMessage('Address is required.'),
@@ -19,14 +20,23 @@ const validateSpot = [
     .notEmpty()
     .withMessage('Country is required.'),
   check('lat')
+    .notEmpty()
+    .withMessage('Latitude is required.')
+    .bail()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must be a number between -90 and 90.'),
   check('lng')
+    .notEmpty()
+    .withMessage('Longitude is required.')
+    .bail()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be a number between -180 and 180.'),
   check('name')
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Name must be between 1 and 50 characters.'),
+    .notEmpty()
+    .withMessage('Name is required.')
+    .bail()
+    .isLength({ max: 50 })
+    .withMessage('Name cannot be longer than 50 characters.'),
   check('description')
     .notEmpty()
     .withMessage('Description is required.'),
@@ -34,17 +44,63 @@ const validateSpot = [
     .isFloat({ gt: 0 })
     .withMessage('Price must be a positive number.'),
   handleValidationErrors
-]; 
+];
+
+const validateEditSpot = [
+  check('address')
+    .optional()
+    .notEmpty()
+    .withMessage('Address is required.'),
+  check('city')
+    .optional()
+    .notEmpty()
+    .withMessage('City is required.'),
+  check('state')
+    .optional()
+    .notEmpty()
+    .withMessage('State is required.'),
+  check('country')
+    .optional()
+    .notEmpty()
+    .withMessage('Country is required.'),
+  check('lat')
+    .optional()
+    .notEmpty()
+    .withMessage('Latitude is required.')
+    .bail()
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must be a number between -90 and 90.'),
+  check('lng')
+    .optional()
+    .notEmpty()
+    .withMessage('Longitude is required.')
+    .bail()
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be a number between -180 and 180.'),
+  check('name')
+    .optional()
+    .notEmpty()
+    .withMessage('Name is required.')
+    .bail()
+    .isLength({ max: 50 })
+    .withMessage('Name cannot be longer than 50 characters.'),
+  check('description')
+    .optional()
+    .notEmpty()
+    .withMessage('Description is required.'),
+  check('price')
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage('Price must be a positive number.'),
+  handleValidationErrors
+];
 
 
 // Create a new spot
-router.post(
-  '/',
-  requireAuth,
-  validateSpot,
-  async (req, res) => {
+router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const { user } = req;
+
     try {
       const newSpot = await Spot.create({
         ownerId: user.id,
@@ -83,6 +139,48 @@ router.get('/:spotId', async (req, res) => {
   }
 
   res.status(200).json(spot);
+});
+
+
+// Edit a spot
+router.patch('/:spotId', requireAuth, validateEditSpot, async (req, res) => {
+  const { spotId } = req.params;
+  const user = req.user;
+  const { address, city, state, country, lat, lng, name, description, price } = req.body
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+      return res.status(404).json({
+        message: 'Spot could not be found'
+      });
+    }
+
+    if (spot.ownerId !== user.id) {
+      return res.status(403).json({
+        message: 'Not authorized'
+      });
+    }
+
+    const updatedSpot = await spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price
+    });
+
+    return res.status(200).json(updatedSpot);
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Editing failed.'
+    });
+  }
 });
 
 // Delete a spot
