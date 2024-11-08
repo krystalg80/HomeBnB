@@ -18,44 +18,25 @@ module.exports = {
       },
       firstName: {
         type: Sequelize.STRING(30),
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [1, 30]
-        }
+        allowNull: false
       },
       lastName: {
         type: Sequelize.STRING(30),
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [1, 30]
-        }
+        allowNull: false
       },
       username: {
         type: Sequelize.STRING(30),
         allowNull: false,
-        unique: true,
-        validate: {
-          notEmpty: true,
-          len: [4, 30] //Not sure what length to set it, but maybe username has to be atleast 5 characters?
-        }
+        unique: true
       },
       email: {
         type: Sequelize.STRING(256),
         allowNull: false,
-        unique: true,
-        validate : {
-          isEmail: true,    // has to be a valid email format @
-          notEmpty: true
-        }
+        unique: true
       },
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
-        allowNull: false,
-        validate: {
-          notEmpty: true //cannot be emptyyy
-        }
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
