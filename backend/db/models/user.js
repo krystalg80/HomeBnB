@@ -68,6 +68,4 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   return User;
-
-//are we supposed to connect user to spot and reviews? IDK much about associations but i read online about it
 };
