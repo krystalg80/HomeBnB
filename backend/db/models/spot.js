@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Spot.belongsTo(models.User, { 
         foreignKey: 'ownerId',
-        as: 'Owner' });
+        as: 'Owner',
+        onDelete: "CASCADE" 
+      });
     }
   }
   Spot.init(
@@ -19,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         references: {
           key: 'id',
           model: 'Users'
-        }
+        },
+        onDelete: "CASCADE"
       },
       address: {
         type: DataTypes.STRING,
