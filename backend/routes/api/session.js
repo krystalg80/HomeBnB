@@ -97,12 +97,8 @@ router.get('/spots', async (req, res) => {
 });
 
 // Get all Reviews of the Current User
-router.get('/reviews', async (req, res, next) => {
+router.get('/reviews', async (req, res) => {
   const user = req.user;
-
-  if (!user) {
-    return res.status(401).json({ message: 'Authentication required' });
-  }
 
   try {
     const reviews = await Review.findAll({
@@ -115,7 +111,8 @@ router.get('/reviews', async (req, res, next) => {
         {
           model: Spot,
           attributes: [
-            'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
+            'id', 'ownerId', 'address', 'city',
+            'state', 'country', 'lat', 'lng',
             'name', 'price', 'previewImage'
           ]
         },
@@ -128,7 +125,9 @@ router.get('/reviews', async (req, res, next) => {
 
     res.status(200).json({ Reviews: reviews });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: 'Failed getting reviews.'
+    });
   }
 });
 
