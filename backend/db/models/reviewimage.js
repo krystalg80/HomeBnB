@@ -3,36 +3,32 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class SpotImage extends Model {
+  class ReviewImage extends Model {
     static associate(models) {
       // define association here
-      SpotImage.belongsTo(models.Spot, {
-        foreignKey: "spotId",
-        as: "spot",
+      ReviewImage.belongsTo(models.Review, {
+        foreignKey: "reviewId",
+        as: "review",
         onDelete: "CASCADE"
       })
     }
   }
-  SpotImage.init({
-    spotId: {
+  ReviewImage.init({
+    reviewId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Spots",
+        model: "Reviews",
         key: "id"
       }
     },
     url: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    preview: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
     }
   }, {
     sequelize,
-    modelName: 'SpotImage',
+    modelName: 'ReviewImage',
   });
-  return SpotImage;
+  return ReviewImage;
 };
