@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { User, Spot } = require('../../db/models');
+const { User, Spot, Review, ReviewImage } = require('../../db/models');
 const router = express.Router();
 
 
@@ -95,5 +95,43 @@ router.get('/spots', async (req, res) => {
   const spots = await Spot.findAll({ where: { ownerId: user.id } });
   res.status(200).json({ Spots: spots });
 });
+
+// Get all Reviews of the Current User
+router.get('/reviews', async (req, res, next) => {
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+
+  try {
+    const reviews = await Review.findAll({
+      where: { userId: user.id },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+          model: Spot,
+          attributes: [
+            'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
+            'name', 'price', 'previewImage'
+          ]
+        },
+        {
+          model: ReviewImage,
+          attributes: ['id', 'url']
+        }
+      ]
+    });
+
+    res.status(200).json({ Reviews: reviews });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 
 module.exports = router;
