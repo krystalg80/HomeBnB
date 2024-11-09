@@ -117,25 +117,26 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
 
       res.status(201).json(newSpot);
     } catch (error) {
-      res.status(500).json({ message: 'Failed to create spot' });
+      res.status(500).json({ message: 'Failed to create spot.' });
     }
   }
 );
 
-
-// Get all spots
+// Get all Spots
 router.get('/', async (req, res) => {
   const spots = await Spot.findAll();
   res.status(200).json({ Spots: spots });
 });
 
-// Get spot by ID
+// Get details of a Spot
 router.get('/:spotId', async (req, res) => {
   const { spotId } = req.params;
   const spot = await Spot.findByPk(spotId);
   
   if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
+    return res.status(404).json({
+      message: "Spot could not be found." 
+    });
   }
 
   res.status(200).json(spot);
@@ -153,13 +154,13 @@ router.patch('/:spotId', requireAuth, validateEditSpot, async (req, res) => {
 
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot could not be found'
+        message: 'Spot could not be found.'
       });
     }
 
     if (spot.ownerId !== user.id) {
       return res.status(403).json({
-        message: 'Not authorized'
+        message: 'Not authorized.'
       });
     }
 
@@ -193,20 +194,20 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
 
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot could not be found'
+        message: 'Spot could not be found.'
       });
     }
 
     if (spot.ownerId !== user.id) {
       return res.status(403).json({
-        message: 'Not authorized'
+        message: 'Not authorized.'
       });
     }
 
     await spot.destroy();
 
     return res.status(200).json({
-      message: 'Spot successfully deleted'
+      message: 'Spot successfully deleted.'
     });
   } catch (error) {
     return res.status(500).json({
@@ -215,30 +216,48 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
   }
 });
 
-// Get all Spot Images based on the Spot's id
-router.get('/:spotId/images', async (req, res) => {
-  const { spotId } = req.params;
+// Delete an Image for a Spot
+router.delete('/:spotId/images/:imageId', requireAuth, async (req, res) => {
+  const { spotId, imageId } = req.params;
+  const user = req.user;
 
   try {
-    // Find images associated with the given spotId
-    const images = await SpotImage.findAll({
-      where: { spotId },
-      attributes: ['id', 'url', 'preview', 'createdAt', 'updatedAt']
-    });
-
-    // If no images are found, return a 404 response
-    if (!images || images.length === 0) {
+    const spot = await Spot.findByPk(spotId);
+    
+    if (!spot) {
       return res.status(404).json({
-        message: 'No images found for this spot'
+        message: 'Spot could not be found.'
       });
     }
 
-    // Return the list of images for the spot
-    return res.status(200).json(images);
+    if (spot.ownerId !== user.id) {
+      return res.status(403).json({
+        message: 'Not authorized.'
+      });
+    }
+
+    const spotImage = await SpotImage.findByPk(imageId);
+    
+    if (!spotImage) {
+      return res.status(404).json({
+        message: 'Spot image could not be found.'
+      });
+    }
+
+    if (spotImage.spotId !== spot.id) {
+      return res.status(403).json({
+        message: 'You can only delete images from your own spot.'
+      });
+    }
+
+    await spotImage.destroy();
+
+    return res.status(200).json({
+      message: 'Image successfully deleted.'
+    });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
-      message: 'Failed to retrieve images'
+      message: 'Failed to delete image.'
     });
   }
 });
@@ -254,13 +273,13 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot could not be found'
+        message: 'Spot could not be found.'
       });
     }
 
     if (spot.ownerId !== user.id) {
       return res.status(403).json({
-        message: 'Not authorized'
+        message: 'Not authorized.'
       });
     }
 
@@ -277,7 +296,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: 'Failed to add image'
+      message: 'Failed to add image.'
     });
   }
 })
