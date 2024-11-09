@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, SpotImage } = require('../../db/models'); 
+const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models'); 
 const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -300,5 +300,40 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     });
   }
 })
+
+// Get all Reviews by a Spot's id
+router.get('/:spotId/reviews', async (req, res) => {
+  const { spotId } = req.params;
+
+  try{
+    const spot = await Spot.findByPk(spotId);
+    
+    if (!spot) {
+      return res.status(404).json({
+        message: 'Spot does not exist.'
+      });
+    }
+
+    const reviews = await Review.findAll({
+      where: { spotId },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+          model: ReviewImage,
+          attributes: ['id', 'url']
+        }
+      ]
+    });
+    return res.json({ Reviews: reviews });
+  } catch {
+    return res.status(500).json({
+      message: 'Failed to get reviews.'
+    });
+  }
+});
+
 
 module.exports = router;
