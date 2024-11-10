@@ -5,6 +5,31 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const router = express.Router();
 
+const validateReview = [
+  check('review')
+    .optional()
+    .notEmpty()
+    .withMessage('Review is required.')
+    .bail()
+    .isString()
+    .withMessage('Review must be a string.')
+    .bail()
+    .isLength({ max: 250 })
+    .withMessage('Review must be a maximum of 250 characters.'),
+  check('stars')
+    .optional()
+    .notEmpty()
+    .withMessage('Star rating is required.')
+    .bail()
+    .custom(value => {
+      if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > 5) {
+        throw new Error('Stars must be a number between 1 and 5.');
+      }
+      return true;
+    }),
+  handleValidationErrors  
+];
+
 // Delete an existing review
 router.delete('/:reviewId', requireAuth, async (req, res) => {
   const user = req.user;
@@ -31,6 +56,95 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: 'Failed to delete review.'
+    });
+  }
+});
+
+// Edit a Review
+router.patch('/:reviewId', requireAuth, validateReview, async (req, res) => {
+  const { reviewId } = req.params;
+  const { review, stars } = req.body;
+  const user = req.user;
+
+  try {
+    const currentReview = await Review.findByPk(reviewId);
+
+    if (!currentReview) {
+      return res.status(404).json({
+        message: 'Review could not be found.'
+      });
+    }
+
+    if (currentReview.userId !== user.id) {
+      return res.status(403).json({
+        message: 'Not authorized.'
+      });
+    }
+
+    if (review) currentReview.review = review;
+    if (stars) currentReview.stars = stars;
+
+    await currentReview.save();
+
+    return res.json({
+      id: currentReview.id,
+      userId: currentReview.userId,
+      spotId: currentReview.spotId,
+      review: currentReview.review,
+      stars: currentReview.stars,
+      createdAt: currentReview.createdAt,
+      updatedAt: currentReview.updatedAt
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: 'Failed to update review.'
+    });
+  }
+});
+
+// Add an Image to a Review based on the Review's id
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
+  const { reviewId } = req.params;
+  const { url } = req.body;
+  const user = req.user;
+
+  try {
+    const review = await Review.findByPk(reviewId);
+    
+    if (!review) {
+      return res.status(404).json({
+        message: 'Review could not be found.'
+      });
+    }
+
+    if (review.userId !== user.id) {
+      return res.status(403).json({
+        message: 'Not authorized.'
+      });
+    }
+
+    const images = await ReviewImage.count({ where: { reviewId } });
+
+    if (images >= 10) {
+      return res.status(403).json({
+        message: 'Maximum number of images has been reached.'
+      });
+    }
+
+    const newImage = await ReviewImage.create({
+      reviewId,
+      url
+    });
+
+    return res.status(201).json({
+      id: newImage.id,
+      url: newImage.url
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to add image to review.'
     });
   }
 });

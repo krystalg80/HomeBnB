@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, SpotImage } = require('../../db/models'); 
+const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models'); 
 const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -300,5 +300,91 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     });
   }
 })
+
+// Get all Reviews by a Spot's id
+router.get('/:spotId/reviews', async (req, res) => {
+  const { spotId } = req.params;
+
+  try{
+    const spot = await Spot.findByPk(spotId);
+    
+    if (!spot) {
+      return res.status(404).json({
+        message: 'Spot does not exist.'
+      });
+    }
+
+    const reviews = await Review.findAll({
+      where: { spotId },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+          model: ReviewImage,
+          attributes: ['id', 'url']
+        }
+      ]
+    });
+    return res.json({ Reviews: reviews });
+  } catch {
+    return res.status(500).json({
+      message: 'Failed to get reviews.'
+    });
+  }
+});
+
+// Create a Review for a Spot based on the Spot's id
+router.post('/:spotId/reviews', requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const userId = req.user.id;
+  const { review, stars } = req.body;
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+    if (!spot) {
+      return res.status(404).json({
+        message: 'Spot does not exist.'
+      });
+    }
+
+    const reviewed = await Review.findOne({
+      where: { spotId, userId }
+    });
+    if (reviewed) {
+      return res.status(403).json({
+        message: 'User has already reviewed this spot.'
+      });
+    }
+
+    if (!review || review.length > 250 || typeof review !== 'string') {
+      return res.status(400).json({
+        message: 'Review is required and must be a string with a maximum length of 250 characters.'
+      });
+    }
+    
+    if (!stars || !Number.isInteger(stars) || stars < 1 || stars > 5) {
+      return res.status(400).json({
+        message: 'Stars rating is required and must be a number between 1 and 5.'
+      });
+    }
+
+    const newReview = await Review.create({
+      userId,
+      spotId,
+      review,
+      stars
+    });
+
+    return res.status(201).json(newReview);
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to create review.'
+    });
+  }
+});
+
+
 
 module.exports = router;
