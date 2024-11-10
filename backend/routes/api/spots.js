@@ -4,6 +4,9 @@ const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
+
 
 
 const validateCreateSpot = [
@@ -95,6 +98,44 @@ const validateEditSpot = [
   handleValidationErrors
 ];
 
+const validateQuery = [
+  check('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Page must be greater than or equal to 1')
+    .default(1),
+  check('size')
+    .optional()
+    .isInt({ min: 1, max: 20 })
+    .withMessage('Size must be between 1 and 20')
+    .default(20),
+  check('minLat')
+    .optional()
+    .isFloat()
+    .withMessage('Minimum latitude is invalid'),
+  check('maxLat')
+    .optional()
+    .isFloat()
+    .withMessage('Maximum latitude is invalid'),
+  check('minLng')
+    .optional()
+    .isFloat()
+    .withMessage('Minimum longitude is invalid'),
+  check('maxLng')
+    .optional()
+    .isFloat()
+    .withMessage('Maximum longitude is invalid'),
+  check('minPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Minimum price must be greater than or equal to 0'),
+  check('maxPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Maximum price must be greater than or equal to 0'),
+  handleValidationErrors
+];
+
 
 // Create a new spot
 router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
@@ -123,10 +164,10 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
 );
 
 // Get all Spots
-router.get('/', async (req, res) => {
-  const spots = await Spot.findAll();
-  res.status(200).json({ Spots: spots });
-});
+// router.get('/', async (req, res) => {
+//   const spots = await Spot.findAll();
+//   res.status(200).json({ Spots: spots });
+// });
 
 // Get details of a Spot
 router.get('/:spotId', async (req, res) => {
@@ -385,6 +426,89 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
   }
 });
 
+// Add Query Filters to Get All Spots
+router.get('/', validateQuery, async (req, res) => {
+  let {
+    page,
+    size,
+    minLat,
+    maxLat,
+    minLng,
+    maxLng,
+    minPrice,
+    maxPrice
+  } = req.query;
+
+  page = parseInt(page) || 1;
+  size = parseInt(size) || 20;
+
+
+  const where = {};
+  
+  try {
+    // if (minLat) {
+    //   where.lat = parseFloat(minLat);
+    // }
+    // if (maxLat) {
+    //   where.lat = parseFloat(maxLat);
+    // }
+    // if (minLng) {
+    //   where.lng = parseFloat(minLng);
+    // }
+    // if (maxLng) {
+    //   where.lng = parseFloat(maxLng);
+    // }
+    // if (minPrice) {
+    //   where.price = parseFloat(minPrice);
+    // }
+    // if (maxPrice) {
+    //   where.price = parseFloat(maxPrice);
+    // }
+
+    if (minLat) {
+      where.lat = { [Sequelize.Op.gte]: parseFloat(minLat) };
+    }
+    if (maxLat) {
+      where.lat = { ...where.lat, [Sequelize.Op.lte]: parseFloat(maxLat) };
+    }
+    if (minLng) {
+      where.lng = { [Sequelize.Op.gte]: parseFloat(minLng) };
+    }
+    if (maxLng) {
+      where.lng = { ...where.lng, [Sequelize.Op.lte]: parseFloat(maxLng) };
+    }
+    if (minPrice) {
+      where.price = { [Sequelize.Op.gte]: parseFloat(minPrice) };
+    }
+    if (maxPrice) {
+      where.price = { ...where.price, [Sequelize.Op.lte]: parseFloat(maxPrice) };
+    }
+
+    limit = size;
+    offset = (page - 1) * size;
+
+    const total = await Spot.count({
+      where
+    });
+    
+    const spots = await Spot.findAll({
+      where,
+      offset,
+      limit
+    });
+
+    return res.json({
+      Spots: spots,
+      page,
+      size,
+      total
+    });  
+  } catch (error) {
+      return res.status(500).json({
+        message: 'Failed to get spots.'
+      });
+    }
+});
 
 
 module.exports = router;
