@@ -55,7 +55,7 @@ Returns the information about the current user that is logged in.
 - Request
 
   - Method: GET
-  - Route path: users/:userId
+  - Route path: /session
   - Body: none
 
 - Successful Response when there is a logged in user
@@ -99,7 +99,7 @@ information.
 - Request
 
   - Method: POST
-  - Route path: /login
+  - Route path: /session
   - Headers:
     - Content-Type: application/json
   - Body:
@@ -169,7 +169,7 @@ user's information.
 - Request
 
   - Method: POST
-  - Route path: /signup
+  - Route path: /users
   - Headers:
     - Content-Type: application/json
   - Body:
@@ -291,7 +291,7 @@ Returns all the spots owned (created) by the current user.
 - Request
 
   - Method: GET
-  - Route path: /users/:userId/spots
+  - Route path: /session/spots
   - Body: none
 
 - Successful Response
@@ -656,7 +656,7 @@ Returns all the reviews written by the current user.
 - Request
 
   - Method: GET
-  - Route path: /users/:userId/reviews
+  - Route path: /session/reviews
   - Body: none
 
 - Successful Response
@@ -855,7 +855,7 @@ Create and return a new image for a review specified by id.
 - Request
 
   - Method: POST
-  - Route path: /reviews/:reviewId/reviewImages
+  - Route path: /reviews/:reviewId/images
   - Headers:
     - Content-Type: application/json
   - Body:

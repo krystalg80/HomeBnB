@@ -167,64 +167,70 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
 router.get('/:spotId', async (req, res) => {
   const { spotId } = req.params;
 
-  const spot = await Spot.findByPk(spotId, {
-    include: [
-      {
-        model: SpotImage,
-        attributes: ['id', 'url', 'preview']
-      },
-      {
-        model: User,
-        as: 'Owner',
-        attributes: ['id', 'firstName', 'lastName']
-      }
-    ]
-  });
+  try {
+    const spot = await Spot.findByPk(spotId, {
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['id', 'url', 'preview']
+        },
+        {
+          model: User,
+          as: 'Owner',
+          attributes: ['id', 'firstName', 'lastName']
+        }
+      ]
+    });
 
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found"
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found"
+      });
+    }
+
+    const reviews = await Review.findAll({
+      where: { spotId }
+    });
+
+    let numReviews = 0;
+    let avgStarRating = 0;
+
+    if (reviews.length > 0) {
+      numReviews = reviews.length;
+
+      let totalStars = 0;
+
+      for (let i = 0; i < reviews.length; i++) {
+        totalStars += reviews[i].stars;
+      }
+      avgStarRating = totalStars / numReviews;
+    }
+
+    const details = {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: spot.createdAt,
+      updatedAt: spot.updatedAt,
+      numReviews: numReviews,
+      avgStarRating: avgStarRating,
+      SpotImages: spot.SpotImages,
+      Owner: spot.Owner
+    };
+    res.status(200).json(details);
+  } catch (error) {
+    res.status(500).json({
+      message: 'Unable to retrieve spot details.'
     });
   }
-
-  const reviews = await Review.findAll({
-    where: { spotId }
-  });
-
-  let numReviews = 0;
-  let avgStarRating = 0;
-
-  if (reviews.length > 0) {
-    numReviews = reviews.length;
-
-    let totalStars = 0;
-
-    for (let i = 0; i < reviews.length; i++) {
-      totalStars += reviews[i].stars;
-    }
-    avgStarRating = totalStars / numReviews;
-  }
-
-  const details = {
-    id: spot.id,
-    ownerId: spot.ownerId,
-    address: spot.address,
-    city: spot.city,
-    state: spot.state,
-    country: spot.country,
-    lat: spot.lat,
-    lng: spot.lng,
-    name: spot.name,
-    description: spot.description,
-    price: spot.price,
-    createdAt: spot.createdAt,
-    updatedAt: spot.updatedAt,
-    numReviews: numReviews,
-    avgStarRating: avgStarRating,
-    SpotImages: spot.SpotImages,
-    Owner: spot.Owner
-  };
-  res.status(200).json(details);
 });
 
 // Edit a Spot
