@@ -137,7 +137,7 @@ const validateQuery = [
 ];
 
 
-// Create a new spot
+// Create a Spot
 router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const { user } = req;
@@ -184,7 +184,7 @@ router.get('/:spotId', async (req, res) => {
 });
 
 
-// Edit a spot
+// Edit a Spot
 router.patch('/:spotId', requireAuth, validateEditSpot, async (req, res) => {
   const { spotId } = req.params;
   const user = req.user;

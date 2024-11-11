@@ -4,6 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -39,7 +40,7 @@ const validateSignup = [
   handleValidationErrors
 ];
 
-// Sign up
+// Sign Up a User
 router.post(
   '/',
   validateSignup,
@@ -47,6 +48,21 @@ router.post(
     const { firstName, lastName, email, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
     try { 
+      const existingUser = await User.findOne({
+        where: {
+          [Op.or]: {
+            email,
+            username
+          }
+        }
+      });
+
+      if (existingUser) {
+        return res.status(500).json({
+          message: "User already exists"
+        });
+      }
+
       const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
       const safeUser = {
@@ -59,7 +75,7 @@ router.post(
 
       await setTokenCookie(res, safeUser);
 
-      return res.json({
+      return res.status(201).json({
         user: safeUser
       });
     } catch (error) {
