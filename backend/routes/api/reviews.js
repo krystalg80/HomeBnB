@@ -30,7 +30,7 @@ const validateReview = [
   handleValidationErrors  
 ];
 
-// Delete an existing review
+// Delete a review
 router.delete('/:reviewId', requireAuth, async (req, res) => {
   const user = req.user;
   const { reviewId } = req.params;

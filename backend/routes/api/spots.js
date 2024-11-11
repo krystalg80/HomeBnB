@@ -5,7 +5,7 @@ const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const Sequelize = require('sequelize');
-const { Op } = require('sequelize');
+
 
 
 
@@ -137,7 +137,7 @@ const validateQuery = [
 ];
 
 
-// Create a new spot
+// Create a Spot
 router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const { user } = req;
@@ -163,28 +163,71 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
   }
 );
 
-// Get all Spots
-// router.get('/', async (req, res) => {
-//   const spots = await Spot.findAll();
-//   res.status(200).json({ Spots: spots });
-// });
-
 // Get details of a Spot
 router.get('/:spotId', async (req, res) => {
   const { spotId } = req.params;
-  const spot = await Spot.findByPk(spotId);
-  
+
+  const spot = await Spot.findByPk(spotId, {
+    include: [
+      {
+        model: SpotImage,
+        attributes: ['id', 'url', 'preview']
+      },
+      {
+        model: User,
+        as: 'Owner',
+        attributes: ['id', 'firstName', 'lastName']
+      }
+    ]
+  });
+
   if (!spot) {
     return res.status(404).json({
-      message: "Spot could not be found." 
+      message: "Spot couldn't be found"
     });
   }
 
-  res.status(200).json(spot);
+  const reviews = await Review.findAll({
+    where: { spotId }
+  });
+
+  let numReviews = 0;
+  let avgStarRating = 0;
+
+  if (reviews.length > 0) {
+    numReviews = reviews.length;
+
+    let totalStars = 0;
+
+    for (let i = 0; i < reviews.length; i++) {
+      totalStars += reviews[i].stars;
+    }
+    avgStarRating = totalStars / numReviews;
+  }
+
+  const details = {
+    id: spot.id,
+    ownerId: spot.ownerId,
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: spot.lat,
+    lng: spot.lng,
+    name: spot.name,
+    description: spot.description,
+    price: spot.price,
+    createdAt: spot.createdAt,
+    updatedAt: spot.updatedAt,
+    numReviews: numReviews,
+    avgStarRating: avgStarRating,
+    SpotImages: spot.SpotImages,
+    Owner: spot.Owner
+  };
+  res.status(200).json(details);
 });
 
-
-// Edit a spot
+// Edit a Spot
 router.patch('/:spotId', requireAuth, validateEditSpot, async (req, res) => {
   const { spotId } = req.params;
   const user = req.user;
@@ -426,6 +469,12 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
   }
 });
 
+// Get all Spots
+// router.get('/', async (req, res) => {
+//   const spots = await Spot.findAll();
+//   res.status(200).json({ Spots: spots });
+// });
+
 // Add Query Filters to Get All Spots
 router.get('/', validateQuery, async (req, res) => {
   let {
@@ -446,25 +495,6 @@ router.get('/', validateQuery, async (req, res) => {
   const where = {};
   
   try {
-    // if (minLat) {
-    //   where.lat = parseFloat(minLat);
-    // }
-    // if (maxLat) {
-    //   where.lat = parseFloat(maxLat);
-    // }
-    // if (minLng) {
-    //   where.lng = parseFloat(minLng);
-    // }
-    // if (maxLng) {
-    //   where.lng = parseFloat(maxLng);
-    // }
-    // if (minPrice) {
-    //   where.price = parseFloat(minPrice);
-    // }
-    // if (maxPrice) {
-    //   where.price = parseFloat(maxPrice);
-    // }
-
     if (minLat) {
       where.lat = { [Sequelize.Op.gte]: parseFloat(minLat) };
     }
@@ -483,13 +513,9 @@ router.get('/', validateQuery, async (req, res) => {
     if (maxPrice) {
       where.price = { ...where.price, [Sequelize.Op.lte]: parseFloat(maxPrice) };
     }
-
-    limit = size;
-    offset = (page - 1) * size;
-
-    const total = await Spot.count({
-      where
-    });
+    
+    const limit = size;
+    const offset = (page - 1) * size;
     
     const spots = await Spot.findAll({
       where,
@@ -500,8 +526,7 @@ router.get('/', validateQuery, async (req, res) => {
     return res.json({
       Spots: spots,
       page,
-      size,
-      total
+      size
     });  
   } catch (error) {
       return res.status(500).json({

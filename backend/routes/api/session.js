@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { User, Spot, Review, ReviewImage } = require('../../db/models');
 const router = express.Router();
 
@@ -20,7 +20,7 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-// Log in
+// Log In a User
 router.post(
   '/',
   validateLogin,
@@ -69,7 +69,7 @@ router.delete(
   }
 );
 
-// Restore session user
+// Get the Current User
 router.get(
   '/',
   (req, res) => {
@@ -89,15 +89,15 @@ router.get(
   }
 );
 
-// Get spots owned by the current user
-router.get('/spots', async (req, res) => {
+// Get all Spots owned by the Current User
+router.get('/spots', requireAuth, async (req, res) => {
   const user = req.user;
   const spots = await Spot.findAll({ where: { ownerId: user.id } });
   res.status(200).json({ Spots: spots });
 });
 
 // Get all Reviews of the Current User
-router.get('/reviews', async (req, res) => {
+router.get('/reviews', requireAuth, async (req, res) => {
   const user = req.user;
 
   try {
