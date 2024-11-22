@@ -18,6 +18,11 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to HomeBnB API!' });
+});
+
 // Security Middleware
 if (!isProduction) {
   // enable cors only in development
