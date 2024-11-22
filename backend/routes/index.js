@@ -7,6 +7,9 @@ const apiRouter = require('./api');
 //   res.send('Hello World!');
 // });
 
+router.get('/', (req, res) => {
+  res.json({ message: 'Welcome to HomeBnB API!' });
+});
 // Add a XSRF-TOKEN cookie
 router.get("/api/csrf/restore", (req, res) => {
   const csrfToken = req.csrfToken();
