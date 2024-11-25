@@ -37,6 +37,18 @@ export const restoreUser = () => async (dispatch) => {
     return res;
 }
 
+//thunk action creator but for signup!
+export const signup = (user) => async (dispatch) => {
+    const { username, firstName, lastName, email, password } = user;
+    const res = await csrfFetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify({username, firstName, lastName, email, password})
+    });
+    const data = await res.json();
+    dispatch(setSessionUser(data.user));
+    return res;
+}
+
 const initialState = {user: null}
 
 const sessionReducer = (state = initialState, action) => {
