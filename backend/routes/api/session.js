@@ -27,6 +27,32 @@ router.post(
   async (req, res, next) => {
     const { credential, password } = req.body;
 
+    // Check if the login is for the demo user (for testing purposes)
+    const demoUser = {
+      username: 'Demo-lition',
+      password: 'password', 
+    };
+
+    if (credential === demoUser.username && password === demoUser.password) {
+      // Create a fake user object for the demo user
+      const safeUser = {
+        id: 1, // You can use a static ID for the demo user
+        firstName: 'Demo',
+        lastName: 'User',
+        email: 'demo@example.com',
+        username: 'Demo-lition',
+      };
+
+      // Set token for demo user
+      await setTokenCookie(res, safeUser);
+
+      return res.json({
+        user: safeUser
+      });
+    }
+
+    //regular login process below
+
     const user = await User.unscoped().findOne({
       where: {
         [Op.or]: {
