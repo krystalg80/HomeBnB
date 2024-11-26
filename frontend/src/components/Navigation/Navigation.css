@@ -1,0 +1,105 @@
+/* Style for the entire navigation container */
+ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    list-style-type: none;
+    margin: 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Style for each list item */
+  li {
+    margin: 0 15px;
+  }
+  
+  /* Logo Styling (Airbnb-style) */
+  .nav-logo {
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #ff385c; /* Airbnb red color */
+    text-decoration: none;
+  }
+  
+  /* Style for the Navigation Links (Log In, Sign Up) */
+  NavLink {
+    color: #484848; 
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 15px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+  
+  /* NavLink hover effect */
+  NavLink:hover {
+    background-color: #ff385c; /* Airbnb red */
+    color: #fff;
+  }
+  
+  /* Active Link Styling */
+  NavLink.active {
+    color: #ff385c;
+    border: 2px solid #ff385c;
+    border-radius: 25px;
+    padding: 5px 15px;
+  }
+  
+  /* Profile Button - Dropdown */
+  .profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    list-style-type: none;
+    margin: 0;
+    width: 200px;
+    display: none; /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .profile-dropdown.show {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Dropdown Item Styling */
+  .profile-dropdown li {
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .profile-dropdown li:hover {
+    background-color: #f7f7f7;
+  }
+  
+  /* Log Out Button Styling */
+  .profile-dropdown button {
+    background-color: transparent;
+    border: none;
+    color: #ff385c;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 0;
+    text-align: left;
+    width: 100%;
+    transition: color 0.2s ease;
+  }
+  
+  .profile-dropdown button:hover {
+    color: #d9534f; /* Darker red on hover */
+  }
+  
