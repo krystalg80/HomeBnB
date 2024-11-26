@@ -60,6 +60,7 @@
     color: red;
     font-size: 14px;
     text-align: left;
+    font-family: monospace;
   }
   
   /* Button */
@@ -76,4 +77,19 @@
   
   .login-button:hover {
     background-color: #e84550;
+  }
+
+  /* Demo User Link */
+.demo-link {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: monospace;
+    text-align: center;
+  }
+  
+.demo-link:hover {
+    text-decoration: underline;
   }
