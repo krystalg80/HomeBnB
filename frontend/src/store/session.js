@@ -29,7 +29,7 @@ export const login = (user) => async (dispatch) => {
     dispatch(setSessionUser(data.user));
     return res;
 }
-
+//think actiion creator restore user
 export const restoreUser = () => async (dispatch) => {
     const res = await csrfFetch('/api/session');
     const data = await res.json();
@@ -48,6 +48,7 @@ export const signup = (user) => async (dispatch) => {
     dispatch(setSessionUser(data.user));
     return res;
 }
+//thunk action creator for logout
 export const logout = () => async (dispatch) => {
     const res = await csrfFetch('/api/session', {
       method: 'DELETE',
