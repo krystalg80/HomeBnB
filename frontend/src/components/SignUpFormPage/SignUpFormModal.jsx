@@ -1,30 +1,30 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
-import './SignUpFormPage.css';
+import './SignUpFormModal.css';
 
 
 
-function SignUpFormPage() {
+function SignUpFormModal() {
   const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user)
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [errors, setErrors] = useState({});
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const { closeModal } = useModal();
 
-  if (sessionUser) return <Navigate to="/" replace={true} />;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
       setErrors({});
-      return dispatch(sessionActions.signup({ email ,username, firstName, lastName, password })).catch(
+      return dispatch(sessionActions.signup({ email ,username, firstName, lastName, password }))
+      .then(closeModal)
+      .catch(
         async (res) => {
           const data = await res.json();
           if (data?.errors) {
@@ -114,4 +114,4 @@ function SignUpFormPage() {
   )
 }
 
-export default SignUpFormPage;
+export default SignUpFormModal;

@@ -4,7 +4,7 @@ import * as sessionActions from "./store/session";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import SignUpFormPage from "./components/SignUpFormPage/SignUpFormPage";
+import SignUpFormPage from "./components/SignUpFormPage/SignUpFormModal";
 import Navigation from "./components/Navigation/Navigation";
 
 function Layout() {
@@ -34,10 +34,6 @@ const router = createBrowserRouter([
         path: '/',
         element: <h1>Welcome</h1>
       },
-      {
-        path: "signup",
-        element: <SignUpFormPage />
-      }
     ]
       
   }
