@@ -1,66 +1,36 @@
-/* Container for the button */
-button {
-    background-color: transparent;
+/* ProfileButton.css */
+.profile-button {
+    background: none;
     border: none;
     cursor: pointer;
-    font-size: 24px;
-    color: #4a4a4a;
-    transition: color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
-  button:hover {
-    color: #1e90ff; /* Change color on hover */
-  }
-  
-  /* Dropdown menu styling */
   .profile-dropdown {
-    position: absolute;
-    right: 0;
-    top: 40px; /* Adjust based on where you want it to appear */
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    list-style-type: none;
+    list-style: none;
+    padding: 0;
     margin: 0;
-    width: 200px; /* You can adjust this value */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure the dropdown is above other elements */
+  }
+  
+  .profile-dropdown.hidden {
+    display: none;
   }
   
   .profile-dropdown li {
-    padding: 10px;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    padding: 8px 16px;
   }
   
-  .profile-dropdown li:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .profile-dropdown button {
-    background-color: transparent;
+  .profile-dropdown li button {
+    background: none;
     border: none;
-    color: #d9534f;
     cursor: pointer;
-    font-size: 14px;
-    padding: 5px 0;
-    text-align: left;
-    width: 100%;
+    color: #007bff;
   }
-  
-  .profile-dropdown button:hover {
-    background-color: transparent;
-    color: #c9302c; /* Darker red on hover */
-  }
-  
-  /* Show the dropdown when menu is open */
-  .profile-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-  }
-  
