@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -24,19 +25,16 @@ function Layout() {
   );
 }
 
-
 const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
       {
         path: '/',
-        element: <h1>Welcome</h1>
+        element: <LandingPage />
       },
     ]
-      
   }
-  
 ]);
 
 function App() {
