@@ -5,6 +5,7 @@ import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignUpFormModal from '../SignUpFormModal/SignUpFormModal';
+import './ProfileButton.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -40,8 +41,8 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle size={24}/>
+      <button onClick={toggleMenu} className="profile-button">
+        <FaUserCircle size={36}/>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (

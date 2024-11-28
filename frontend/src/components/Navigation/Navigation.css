@@ -23,6 +23,11 @@ ul {
     color: #ff385c; /* Airbnb red color */
     text-decoration: none;
   }
+
+  .logo {
+    height: 50px; /* Adjust the height as needed */
+    cursor: pointer;
+  }
   
   /* Style for the Navigation Links (Log In, Sign Up) */
   NavLink {
