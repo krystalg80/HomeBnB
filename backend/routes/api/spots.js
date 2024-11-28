@@ -5,6 +5,7 @@ const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const Sequelize = require('sequelize');
+const mockSpots = require('../../data/mockSpots'); // Import the mock data
 
 
 
@@ -476,70 +477,14 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
 });
 
 // Get all Spots
-// router.get('/', async (req, res) => {
-//   const spots = await Spot.findAll();
-//   res.status(200).json({ Spots: spots });
-// });
-
-// Add Query Filters to Get All Spots
-router.get('/', validateQuery, async (req, res) => {
-  let {
-    page,
-    size,
-    minLat,
-    maxLat,
-    minLng,
-    maxLng,
-    minPrice,
-    maxPrice
-  } = req.query;
-
-  page = parseInt(page) || 1;
-  size = parseInt(size) || 20;
-
-
-  const where = {};
-  
+router.get('/', async (req, res) => {
   try {
-    if (minLat) {
-      where.lat = { [Sequelize.Op.gte]: parseFloat(minLat) };
-    }
-    if (maxLat) {
-      where.lat = { ...where.lat, [Sequelize.Op.lte]: parseFloat(maxLat) };
-    }
-    if (minLng) {
-      where.lng = { [Sequelize.Op.gte]: parseFloat(minLng) };
-    }
-    if (maxLng) {
-      where.lng = { ...where.lng, [Sequelize.Op.lte]: parseFloat(maxLng) };
-    }
-    if (minPrice) {
-      where.price = { [Sequelize.Op.gte]: parseFloat(minPrice) };
-    }
-    if (maxPrice) {
-      where.price = { ...where.price, [Sequelize.Op.lte]: parseFloat(maxPrice) };
-    }
-    
-    const limit = size;
-    const offset = (page - 1) * size;
-    
-    const spots = await Spot.findAll({
-      where,
-      offset,
-      limit
-    });
-
-    return res.json({
-      Spots: spots,
-      page,
-      size
-    });  
+    // Simulate fetching spots data
+    res.json({ spots: mockSpots });
   } catch (error) {
-      return res.status(500).json({
-        message: 'Failed to get spots.'
-      });
-    }
+    console.error('Error fetching spots:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
-
 
 module.exports = router;

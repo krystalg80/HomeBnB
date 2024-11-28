@@ -1,0 +1,49 @@
+/* SpotTile.css */
+.spot-tile {
+  display: block;
+  width: 200px;
+  text-align: left;
+  text-decoration: none;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.spot-tile:hover {
+  transform: scale(1.05);
+}
+
+.spot-thumbnail {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.spot-info {
+  padding: 10px;
+}
+
+.spot-location {
+  font-size: 14px;
+  color: #555;
+}
+
+.spot-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.spot-rating {
+  font-size: 14px;
+  color: #ff385c; /* Airbnb red color */
+}
+
+.spot-price {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
