@@ -26,6 +26,15 @@ const mockSpots = [
     rating: 4.2,
     price: 180,
   },
+  {
+    id: 4,
+    thumbnail: 'https://via.placeholder.com/200',
+    city: 'Santa Clara',
+    state: 'CA',
+    name: 'Small House in Santa Clara',
+    rating: 4.4,
+    price: 190,
+  },
   //basic spots to fetch data!
 ];
 
