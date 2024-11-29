@@ -9,12 +9,8 @@ function LandingPage() {
   useEffect(() => {
     // Fetch spots data from your backend
     fetch('/api/spots')
-      .then(response => {
-        console.log('Response:', response); // Log the response
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
-        console.log('Data:', data); // Log the data
         if (data.spots) {
           setSpots(data.spots);
         } else {

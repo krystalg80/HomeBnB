@@ -1,11 +1,10 @@
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import * as sessionActions from './store/session';
+import Navigation from './components/Navigation/Navigation';
+import LandingPage from './components/LandingPage/LandingPage';
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import * as sessionActions from "./store/session";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import Navigation from "./components/Navigation/Navigation";
-import LandingPage from "./components/LandingPage/LandingPage";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -13,7 +12,7 @@ function Layout() {
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
+      setIsLoaded(true);
     });
   }, [dispatch]);
 
@@ -33,6 +32,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <LandingPage />
       },
+      // Add other routes here
     ]
   }
 ]);

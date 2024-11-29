@@ -7,9 +7,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 const Sequelize = require('sequelize');
 const mockSpots = require('../../data/mockSpots'); // Import the mock data
 
-
-
-
 const validateCreateSpot = [
   check('address')
     .notEmpty()
@@ -166,71 +163,17 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
 
 // Get details of a Spot
 router.get('/:spotId', async (req, res) => {
-  const { spotId } = req.params;
-
   try {
-    const spot = await Spot.findByPk(spotId, {
-      include: [
-        {
-          model: SpotImage,
-          attributes: ['id', 'url', 'preview']
-        },
-        {
-          model: User,
-          as: 'Owner',
-          attributes: ['id', 'firstName', 'lastName']
-        }
-      ]
-    });
+    const spot = mockSpots.find(spot => spot.id === parseInt(req.params.spotId));
 
     if (!spot) {
-      return res.status(404).json({
-        message: "Spot couldn't be found"
-      });
+      return res.status(404).json({ error: 'Spot not found' });
     }
 
-    const reviews = await Review.findAll({
-      where: { spotId }
-    });
-
-    let numReviews = 0;
-    let avgStarRating = 0;
-
-    if (reviews.length > 0) {
-      numReviews = reviews.length;
-
-      let totalStars = 0;
-
-      for (let i = 0; i < reviews.length; i++) {
-        totalStars += reviews[i].stars;
-      }
-      avgStarRating = totalStars / numReviews;
-    }
-
-    const details = {
-      id: spot.id,
-      ownerId: spot.ownerId,
-      address: spot.address,
-      city: spot.city,
-      state: spot.state,
-      country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
-      name: spot.name,
-      description: spot.description,
-      price: spot.price,
-      createdAt: spot.createdAt,
-      updatedAt: spot.updatedAt,
-      numReviews: numReviews,
-      avgStarRating: avgStarRating,
-      SpotImages: spot.SpotImages,
-      Owner: spot.Owner
-    };
-    res.status(200).json(details);
+    res.json({ spot });
   } catch (error) {
-    res.status(500).json({
-      message: 'Unable to retrieve spot details.'
-    });
+    console.error('Error fetching spot details:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -479,8 +422,24 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
 // Get all Spots
 router.get('/', async (req, res) => {
   try {
-    // Simulate fetching spots data
-    res.json({ spots: mockSpots });
+    const spots = await Spot.findAll({
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['url'],
+          where: { preview: true },
+          required: false,
+        },
+      ],
+    });
+
+    const spotsWithDetails = spots.map(spot => {
+      const spotData = spot.toJSON();
+      spotData.thumbnail = spotData.SpotImages.length > 0 ? spotData.SpotImages[0].url : null;
+      return spotData;
+    });
+
+    res.json({ spots: spotsWithDetails });
   } catch (error) {
     console.error('Error fetching spots:', error);
     res.status(500).json({ error: 'Internal server error' });
