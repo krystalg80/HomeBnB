@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
+    options.tableName = 'Spots'; 
     await Spot.bulkCreate([
       {
         ownerId: 1,
@@ -84,7 +85,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    options.tableName = 'Spots';
+    const options = { tableName: 'Spots' };
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       name: { 

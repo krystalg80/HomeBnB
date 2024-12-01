@@ -370,7 +370,8 @@ router.get('/:spotId/reviews', async (req, res) => {
       ]
     });
     return res.json({ Reviews: reviews });
-  } catch {
+  } catch (error) {
+    console.error('Error fetching reviews:', error); // Add logging
     return res.status(500).json({
       message: 'Failed to get reviews.'
     });
@@ -421,6 +422,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
 
     return res.status(201).json(newReview);
   } catch (error) {
+    console.error('Error creating review:', error); // Add logging
     return res.status(500).json({
       message: 'Failed to create review.'
     });

@@ -76,3 +76,60 @@
 .reserve-button:hover {
   background-color: #e03150;
 }
+
+.reviews-section {
+  margin-top: 2rem;
+  border-top: 2px solid #ddd;
+  padding-top: 1rem;
+}
+
+.reviews-section h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.reviews-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.reviews-section li {
+  margin-bottom: 1rem;
+}
+
+.reviews-section li p {
+  margin: 0.25rem 0;
+}
+
+.review-form {
+  margin-top: 1.5rem;
+}
+
+.review-form h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-form textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.review-form button {
+  background-color: #ff385c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.review-form button:hover {
+  background-color: #e03150;
+}
