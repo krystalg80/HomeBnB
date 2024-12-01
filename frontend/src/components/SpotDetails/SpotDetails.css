@@ -30,7 +30,7 @@
   border-radius: 8px;
 }
 
-
+/* Add styles for the spot info */
 .spot-info {
   margin-top: 20px;
 }
@@ -47,20 +47,25 @@
   align-items: flex-start;
 }
 
-
 .reserve-box {
-    padding: 5px; /* Increased padding */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-left: 20px;
-    text-align: center;
-    width: 1000px; /* Increased width */
-    height: 100px;
-  }
+  padding: 5px; /* Increased padding */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-left: 20px;
+  text-align: center;
+  width: 1000px; /* Increased width */
+  height: 100px;
+}
 
 .reserve-box p {
   font-size: 20px; /* Increased font size */
   text-align: left;
+}
+
+.price-and-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .reserve-button {
@@ -71,14 +76,16 @@
   border-radius: 4px;
   cursor: pointer;
   width: 250px;
+  margin-top: 10px;
 }
 
 .reserve-button:hover {
-  background-color: #e03150;
+  background-color: #e63950;
 }
 
+/* Add styles for the reviews section */
 .reviews-section {
-  margin-top: 2rem;
+  margin-top: 20px;
   border-top: 2px solid #ddd;
   padding-top: 1rem;
 }
@@ -101,8 +108,22 @@
   margin: 0.25rem 0;
 }
 
+/* Add styles for the review summary */
+.review-summary {
+  display: flex;
+  align-items: center;
+}
+
+.star-icon {
+  color: gold;
+  margin-right: 5px;
+}
+
+/* Add styles for the review form */
 .review-form {
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 }
 
 .review-form h3 {
@@ -113,23 +134,67 @@
 .review-form textarea {
   width: 100%;
   height: 100px;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
 }
 
+.review-form input[type="number"] {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
 .review-form button {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
   background-color: #ff385c;
   color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  font-size: 1rem;
   cursor: pointer;
 }
 
 .review-form button:hover {
-  background-color: #e03150;
+  background-color: #e63950;
+}
+
+.review {
+  margin-bottom: 20px;
+}
+
+.review p {
+  margin: 5px 0;
+}
+
+/* Add styles for the review modal */
+.review-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.review-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+}
+
+.review-modal-content h3 {
+  margin-top: 0;
+}
+
+.review-modal-content button {
+  margin-top: 10px;
 }
