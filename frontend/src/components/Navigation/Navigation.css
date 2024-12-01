@@ -8,6 +8,8 @@ ul {
     list-style-type: none;
     margin: 0;
     border-bottom: 1px solid #ddd;
+    padding-left: 30px;
+    padding-right: 30px;
   }
   
   /* Style for each list item */
@@ -27,6 +29,7 @@ ul {
   .logo {
     height: 50px; /* Adjust the height as needed */
     cursor: pointer;
+    padding-left: 20px;
   }
   
   /* Style for the Navigation Links (Log In, Sign Up) */
