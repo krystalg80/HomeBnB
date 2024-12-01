@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from './store/session';
 import Navigation from './components/Navigation/Navigation';
 import LandingPage from './components/LandingPage/LandingPage';
+import SpotDetails from './components/SpotDetails/SpotDetails';
 
 
 function Layout() {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />
+      },
+      {
+        path: '/spots/:spotId', // Route for SpotDetails page
+        element: <SpotDetails /> // Render SpotDetails component for a specific spot
       },
       // Add other routes here
     ]

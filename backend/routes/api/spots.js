@@ -5,7 +5,6 @@ const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const Sequelize = require('sequelize');
-const mockSpots = require('../../data/mockSpots'); // Import the mock data
 
 const validateCreateSpot = [
   check('address')
@@ -164,7 +163,16 @@ router.post('/', requireAuth, validateCreateSpot, async (req, res) => {
 // Get details of a Spot
 router.get('/:spotId', async (req, res) => {
   try {
-    const spot = mockSpots.find(spot => spot.id === parseInt(req.params.spotId));
+    const spot = await Spot.findByPk(req.params.spotId, {
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['url'],
+          where: { preview: true },
+          required: false,
+        }
+      ]
+    });
 
     if (!spot) {
       return res.status(404).json({ error: 'Spot not found' });
