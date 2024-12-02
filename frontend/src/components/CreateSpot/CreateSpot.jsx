@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../context/Modal';
 import './CreateSpot.css';
 
 function CreateSpot() {
   const navigate = useNavigate();
-  const sessionUser = useSelector(state => state.session.user);
   const { closeModal } = useModal();
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
