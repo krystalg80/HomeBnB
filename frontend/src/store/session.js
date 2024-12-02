@@ -30,11 +30,31 @@ export const login = (user) => async (dispatch) => {
     return res;
 }
 //think actiion creator restore user
+
 export const restoreUser = () => async (dispatch) => {
-    const res = await csrfFetch('/api/session');
-    const data = await res.json();
-    dispatch(setSessionUser(data.user));
-    return res;
+    try {
+        console.log('Attempting to restore user');
+        console.log('Full URL being fetched:', '/api/session');
+        
+        const res = await csrfFetch('/api/session');
+        
+        console.log('Response status:', res.status);
+        console.log('Response headers:', Object.fromEntries(res.headers.entries()));
+        
+        const data = await res.json();
+        
+        console.log('Received data:', data);
+        dispatch(setSessionUser(data.user));
+        return res;
+    } catch (error) {
+        console.error('Error in restoreUser:', error);
+        console.error('Error details:', {
+            status: error.status,
+            message: error.message,
+            stack: error.stack
+        });
+        throw error;
+    }
 }
 
 //thunk action creator but for signup!
