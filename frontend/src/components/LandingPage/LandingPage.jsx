@@ -26,8 +26,8 @@ function LandingPage() {
   return (
     <div className="landing-page">
       <header className="landing-header">
-        <h1>Welcome to HomeBnB</h1>
-        <p>Book unique homes and experiences all over the world.</p>
+        {/* <h1>Welcome to HomeBnB</h1>
+        <p>Book unique homes and experiences all over the world.</p> */}
       </header>
       <section className="landing-content">
         {error ? (

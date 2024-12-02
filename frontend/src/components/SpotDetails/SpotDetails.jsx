@@ -116,6 +116,34 @@ function SpotDetails() {
     }
   };
 
+  const handleDeleteReview = async (reviewId) => {
+    const token = localStorage.getItem('token');  // Get JWT token from localStorage
+
+    if (!token) {
+      console.error('No authentication token found');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include JWT token
+          'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete review');
+      }
+
+      setReviews(reviews.filter(review => review.id !== reviewId));
+    } catch (err) {
+      console.error('Error deleting review:', err);
+    }
+  };
+
   // Calculate average rating and review count
   const averageRating = reviews.length > 0
     ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviews.length).toFixed(2)
@@ -187,6 +215,9 @@ function SpotDetails() {
                 <p><strong>{review.User?.firstName || 'Unknown'}</strong> - {new Date(review.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                 <p>{review.review}</p>
                 <p>Rating: {review.stars} ⭐</p>
+                {sessionUser && sessionUser.id === review.userId && (
+                  <button onClick={() => handleDeleteReview(review.id)} className="delete-button">Delete</button>
+                )}
               </li>
             ))}
           </ul>

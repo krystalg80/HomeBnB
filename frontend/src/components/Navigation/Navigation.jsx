@@ -9,9 +9,10 @@ function Navigation({ isLoaded }) {
 
   return (
     <ul>
-      <li>
-        <NavLink to="/">
-        <img src={logo} alt="Home" className="logo" />
+      <li >
+        <NavLink to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          <img src={logo} alt="Home" className="logo" />
+          <span className="homebnb-text" >HomeBnB</span>
         </NavLink>
       </li>
       {sessionUser && (

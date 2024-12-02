@@ -31,7 +31,7 @@ const validateReview = [
 ];
 
 // Delete a review
-router.delete('/:reviewId', requireAuth, async (req, res) => {
+router.delete('/:reviewId', async (req, res) => {
   const user = req.user;
   const { reviewId } = req.params;
 

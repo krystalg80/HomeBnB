@@ -90,6 +90,13 @@
   padding-top: 1rem;
 }
 
+.reviews-section button {
+  background-color: #726f70;
+  box-shadow: 10px 10px;
+  width: auto;
+  color: white;
+}
+
 .reviews-section h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
@@ -119,26 +126,42 @@
   margin-right: 5px;
 }
 
+.review-modal-content {
+  background-color: white;
+  padding: 20px;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  max-width: 90%;
+  width: 375px;
+  font-family: monospace; 
+}
 /* Add styles for the review form */
 .review-form {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  font-family: monospace; 
+  border-color: black;
+  border-radius: 8px;
 }
-
-.review-form h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+.review-modal-content h3{
+ font-family: monospace;
+ font-size: 23px;
+ font-weight: lighter;
+ align-items: center;
+ text-align: center;
 }
 
 .review-form textarea {
   width: 100%;
-  height: 100px;
+  height: 150px;
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #000000;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 12px;
+  font-family: monospace; 
+  background-color: #ecf4fc;
 }
 
 .review-form input[type="number"] {
@@ -156,6 +179,7 @@
   background-color: #ff385c;
   color: white;
   cursor: pointer;
+  font-family: monospace;
 }
 
 .review-form button:hover {
@@ -182,19 +206,6 @@
   justify-content: center;
   align-items: center;
 }
-
-.review-modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 500px;
-  max-width: 90%;
-}
-
-.review-modal-content h3 {
-  margin-top: 0;
-}
-
 .review-modal-content button {
   margin-top: 10px;
 }

@@ -79,6 +79,9 @@ function ManageSpots() {
       <ul className="spot-list">
         {spots.map(spot => (
           <li key={spot.id} className="spot-item">
+            <div className="spot-image-container">
+              <img src={spot.previewImage} alt={spot.name} className="spot-image" />
+            </div>
             <div className="spot-info">
               <h3>{spot.name}</h3>
               <p>{spot.city}, {spot.state}</p>

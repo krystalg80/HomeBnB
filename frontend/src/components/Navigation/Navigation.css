@@ -10,20 +10,21 @@ ul {
     border-bottom: 1px solid #ddd;
     padding-left: 30px;
     padding-right: 30px;
+    text-decoration: none;
+    font-family: monospace;
   }
   
   /* Style for each list item */
   li {
     margin: 0 15px;
+    text-decoration: none;
   }
   
   /* Logo Styling (Airbnb-style) */
-  .nav-logo {
-    font-family: 'Nunito', sans-serif;
-    font-weight: bold;
-    font-size: 24px;
+  .homebnb-text {
+    font-size: 22px;
+    font-weight: 500;
     color: #ff385c; /* Airbnb red color */
-    text-decoration: none;
   }
 
   .logo {
@@ -32,29 +33,6 @@ ul {
     padding-left: 20px;
   }
   
-  /* Style for the Navigation Links (Log In, Sign Up) */
-  NavLink {
-    color: #484848; 
-    text-decoration: none;
-    font-size: 16px;
-    padding: 5px 15px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-  }
-  
-  /* NavLink hover effect */
-  NavLink:hover {
-    background-color: #ff385c; /* Airbnb red */
-    color: #fff;
-  }
-  
-  /* Active Link Styling */
-  NavLink.active {
-    color: #ff385c;
-    border: 2px solid #ff385c;
-    border-radius: 25px;
-    padding: 5px 15px;
-  }
   
   /* Profile Button - Dropdown */
   .profile-dropdown {
@@ -113,8 +91,10 @@ ul {
 
   .create-spot-link {
     text-decoration: none;
-    color: #007bff;
+    color: #455260;
     font-weight: bold;
+    
+
   }
   
   .create-spot-link:hover {

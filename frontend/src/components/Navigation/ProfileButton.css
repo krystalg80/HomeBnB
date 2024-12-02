@@ -7,31 +7,68 @@
     align-items: center;
     justify-content: center;
     padding: 0;
+    max-width: 150px; /* Adjust the width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .profile-dropdown {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     position: absolute;
+    top: 50px;
+    right: 20px;
     background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Ensure the dropdown is above other elements */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    list-style-type: none;
+    margin: 0;
+    width: 200px;
+    display: none; /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    
   }
   
-  .profile-dropdown.hidden {
-    display: none;
+  .profile-dropdown.show {
+    display: block;
+    opacity: 1;
+    visibility: visible;
   }
   
   .profile-dropdown li {
-    padding: 8px 16px;
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: monospace; /* Ensure consistent font */
   }
   
-  .profile-dropdown li button {
-    background: none;
+  .profile-dropdown li a {
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent */
+    font-family: inherit; /* Inherit font from parent */
+  }
+  
+  .profile-dropdown li:hover {
+    background-color: #f7f7f7;
+  }
+  
+  .profile-dropdown button {
+    background-color: transparent;
     border: none;
+    color: #ff385c;
     cursor: pointer;
-    color: #007bff;
+    font-size: 14px;
+    padding: 5px 0;
+    text-align: left;
+    width: 100%;
+    transition: color 0.2s ease;
+  }
+  
+  .profile-dropdown button:hover {
+    color: #d9534f; /* Darker red on hover */
   }

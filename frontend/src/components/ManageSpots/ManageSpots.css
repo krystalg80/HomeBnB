@@ -10,10 +10,15 @@
 }
 
 .spot-list {
-  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 0;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+  margin: 15px;
 }
-
 .spot-item {
   display: flex;
   justify-content: space-between;
