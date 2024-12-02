@@ -97,30 +97,22 @@ router.delete(
 );
 
 // Get the Current User
-router.get(
-  '/:id',
-  restoreUser,  // Optional: Only use if you want to validate session for the user making the request
-  async (req, res) => {
-    const { id } = req.params;  // Get the user ID from the route parameter
-
-    // Look up the user by the provided ID
-    const user = await User.findByPk(id);  // Using Sequelize's findByPk method
-    if (user) {
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-      return res.json({
-        user: safeUser
-      });
-    } else {
-      return res.status(404).json({ message: "User not found" });
-    }
-  }
-);
+router.get('/', (req, res) => {
+  const { user } = req;
+  console.log('Current user:', user); // Log the user data
+  if (user) {
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
+    return res.json({
+      user: safeUser
+    });
+  } else return res.json({ user: null });
+});
 
 // Get all Spots owned by the Current User
 router.get('/spots', requireAuth, async (req, res) => {
