@@ -445,7 +445,10 @@ router.get('/', async (req, res) => {
 
     const spotsWithDetails = spots.map(spot => {
       const spotData = spot.toJSON();
+      
+      // Ensure the thumbnail is taken from the SpotImages array (first image URL)
       spotData.thumbnail = spotData.SpotImages.length > 0 ? spotData.SpotImages[0].url : null;
+
       return spotData;
     });
 
@@ -455,6 +458,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 
