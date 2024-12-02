@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import './ManageSpots.css';
 
 function ManageSpots() {
-  const sessionUser = useSelector(state => state.session.user); 
+  const sessionUser = useSelector(state => state.session.user);
   const [spots, setSpots] = useState([]);
   const [csrfToken, setCsrfToken] = useState('');
 
@@ -85,12 +85,13 @@ function ManageSpots() {
               <p>${spot.price}/night</p>
             </div>
             <div className="spot-actions">
-              <Link to={`/spots/${spot.id}/edit`} className="edit-button">Edit</Link>
+              <Link to={`edit/${spot.id}`} className="edit-button">Edit</Link>
               <button onClick={() => handleDelete(spot.id)} className="delete-button">Delete</button>
             </div>
           </li>
         ))}
       </ul>
+      <Outlet /> {/* Render child routes here */}
     </div>
   );
 }

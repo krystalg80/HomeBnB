@@ -1,0 +1,59 @@
+.update-spot-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.update-spot-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+}
+
+.update-spot-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.update-spot-form .error-text {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.update-spot-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.update-spot-form input,
+.update-spot-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-spot-form button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ff385c;
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.update-spot-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.update-spot-form button:hover:not(:disabled) {
+  background-color: #e63950;
+}

@@ -10,7 +10,7 @@ module.exports = {
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh'],
-  ignorePatterns: ['dist', 'node_modules'],
+  ignorePatterns: ['dist', 'node_modules',],
   overrides: [
     {
       files: [

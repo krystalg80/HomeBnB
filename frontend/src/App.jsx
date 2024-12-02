@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/ManageSpots/ManageSpots';
+import UpdateSpot from './components/UpdateSpot/UpdateSpot';
 
 
 function Layout() {
@@ -45,9 +46,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/manage-spots', // Route for ManageSpots page
-        element: <ManageSpots /> // Render ManageSpots component
-      }
-      // Add other routes here
+        element: <ManageSpots />, 
+        children: [
+          {
+            path: 'edit/:spotId',
+            element: <UpdateSpot />
+          }
+        ]
+      },
+     
     ]
   }
 ]);
