@@ -23,7 +23,10 @@ module.exports = {
         description: 'Stylish one-bedroom apartment in the heart of Silicon Valley. Perfect for tech professionals and travelers visiting the Bay Area.',
         price: 200,
         avgRating: 4.8,
-        previewImage: 'https://rentpath-res.cloudinary.com/$img_current/t_3x2_webp_lg/65ea5991fd9869a22e0f1536af1282da'
+        previewImage: 'https://rentpath-res.cloudinary.com/$img_current/t_3x2_webp_lg/65ea5991fd9869a22e0f1536af1282da',
+        SpotImages: [
+          {url: 'https://rentpath-res.cloudinary.com/$img_current/t_3x2_webp_lg/65ea5991fd9869a22e0f1536af1282da'},
+        ]
       },
       {
         ownerId: 2,
@@ -37,7 +40,10 @@ module.exports = {
         description: 'Cozy loft in the vibrant heart of Hollywood. Walking distance to famous landmarks like the Walk of Fame and the Hollywood Sign.',
         price: 150,
         avgRating: 4.7,
-        previewImage: 'https://media.knockrentals.com/knock/community/1828/f4fe11b3eacab4799dc09efd19f71932.jpg'
+        previewImage: 'https://media.knockrentals.com/knock/community/1828/f4fe11b3eacab4799dc09efd19f71932.jpg',
+        SpotImages: [
+          {url: 'https://media.knockrentals.com/knock/community/1828/f4fe11b3eacab4799dc09efd19f71932.jpg'},
+        ]
       },
       {
         ownerId: 3,
@@ -51,7 +57,10 @@ module.exports = {
         description: 'Bright, airy loft located in downtown Austin, ideal for exploring the city’s lively cultural scene, including live music, restaurants, and festivals.',
         price: 180,
         avgRating: 4.6,
-        previewImage: 'https://www.urbanspacerealtors.com/wp-content/uploads/2018/05/brazoslofts-4-1024x576.jpg'
+        previewImage: 'https://www.urbanspacerealtors.com/wp-content/uploads/2018/05/brazoslofts-4-1024x576.jpg',
+        SpotImages: [
+          {url: 'https://www.urbanspacerealtors.com/wp-content/uploads/2018/05/brazoslofts-4-1024x576.jpg'},
+        ]
       },
       {
         ownerId: 4,
@@ -65,7 +74,10 @@ module.exports = {
         description: 'A stunning, modern house in Cupertino, perfect for families or business travelers. Close to Apple Park and other tech hubs.',
         price: 250,
         avgRating: 4.9,
-        previewImage: 'https://images.squarespace-cdn.com/content/v1/647492104073c862ac184723/9f8c5e84-943b-4d61-9430-7c21a89f28a7/eichler-home-cupertino.jpg'
+        previewImage: 'https://images.squarespace-cdn.com/content/v1/647492104073c862ac184723/9f8c5e84-943b-4d61-9430-7c21a89f28a7/eichler-home-cupertino.jpg',
+        spotImages: [
+          {url: 'https://images.squarespace-cdn.com/content/v1/647492104073c862ac184723/9f8c5e84-943b-4d61-9430-7c21a89f28a7/eichler-home-cupertino.jpg'},
+        ]
       },
       {
         ownerId: 5,
@@ -79,7 +91,10 @@ module.exports = {
         description: 'Bright and inviting apartment in a prime San Francisco location, just a short ride from Fisherman’s Wharf, Golden Gate Park, and more.',
         price: 123,
         avgRating: 4.5,
-        previewImage: 'https://images1.apartments.com/i2/gxfCQMjEkd-zliiVOWVosUcJgZ1FF42CSKCl-8RihZE/117/image.jpg'
+        previewImage: 'https://images1.apartments.com/i2/gxfCQMjEkd-zliiVOWVosUcJgZ1FF42CSKCl-8RihZE/117/image.jpg',
+        SpotImages: [
+          {url: 'https://images1.apartments.com/i2/gxfCQMjEkd-zliiVOWVosUcJgZ1FF42CSKCl-8RihZE/117/image.jpg'},
+        ]
       }
     ], { validate: true });
   },
