@@ -20,6 +20,7 @@ const validateLogin = [
   handleValidationErrors
 ];
 
+
 // Log In a User
 router.post(
   '/',
@@ -98,6 +99,7 @@ router.delete(
 // Get the Current User
 router.get(
   '/',
+  restoreUser, // Add the requireAuth middleware here to check the session or token
   (req, res) => {
     const { user } = req;
     if (user) {
@@ -111,7 +113,9 @@ router.get(
       return res.json({
         user: safeUser
       });
-    } else return res.json({ user: null });
+    } else {
+      return res.json({ user: null });
+    }
   }
 );
 
