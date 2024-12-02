@@ -6,16 +6,13 @@ const apiRouter = require('./api');
 // API Routes
 router.use('/api', apiRouter);
 
-// Add a XSRF-TOKEN cookie for development
-if (process.env.NODE_ENV !== 'production') {
-  router.get('/api/csrf/restore', (req, res) => {
-    const csrfToken = req.csrfToken();
-    res.cookie('XSRF-TOKEN', csrfToken);
-    res.status(200).json({
-      'XSRF-Token': csrfToken,
-    });
-  });
-}
+// CSRF Restore Route
+router.get('/api/csrf/restore', (req, res) => {
+  const csrfToken = req.csrfToken();
+  res.cookie('XSRF-TOKEN', csrfToken);
+  res.status(200).json({ 'XSRF-Token': csrfToken });
+});
+
 
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {
