@@ -6,11 +6,6 @@ const apiRouter = require('./api');
 // API Routes
 router.use('/api', apiRouter);
 
-// Welcome message at the root route (can be removed if not needed)
-router.get('/', (req, res) => {
-  res.json({ message: 'Welcome to HomeBnB API!' });
-});
-
 // Add a XSRF-TOKEN cookie for development
 if (process.env.NODE_ENV !== 'production') {
   router.get('/api/csrf/restore', (req, res) => {

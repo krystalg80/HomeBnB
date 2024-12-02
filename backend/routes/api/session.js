@@ -99,7 +99,6 @@ router.delete(
 // Get the Current User
 router.get('/', (req, res) => {
   const { user } = req;
-  console.log('Current user:', user); // Log the user data
   if (user) {
     const safeUser = {
       id: user.id,
