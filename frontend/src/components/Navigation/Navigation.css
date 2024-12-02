@@ -110,4 +110,13 @@ ul {
   .profile-dropdown button:hover {
     color: #d9534f; /* Darker red on hover */
   }
+
+  .create-spot-link {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
   
+  .create-spot-link:hover {
+    color: #0056b3;
+  }
