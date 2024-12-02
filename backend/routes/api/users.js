@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
+const { Spot, SpotImage } = require('../../db/models');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
@@ -83,6 +84,30 @@ router.post(
     }  
   }
 );
+
+// Get all Spots for a User
+router.get('/:userId/spots', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const spots = await Spot.findAll({
+      where: { ownerId: userId },
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['url'],
+          where: { preview: true },
+          required: false,
+        },
+      ],
+    });
+
+    res.json({ spots });
+  } catch (error) {
+    console.error('Error fetching user spots:', error);
+    res.status(500).json({ message: 'Failed to fetch user spots.' });
+  }
+});
 
 
 module.exports = router;

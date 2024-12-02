@@ -6,6 +6,7 @@ import Navigation from './components/Navigation/Navigation';
 import LandingPage from './components/LandingPage/LandingPage';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpot from './components/CreateSpot/CreateSpot';
+import ManageSpots from './components/ManageSpots/ManageSpots';
 
 
 function Layout() {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/create-spot', // Route for CreateSpot page
         element: <CreateSpot /> // Render CreateSpot component
+      },
+      {
+        path: '/manage-spots', // Route for ManageSpots page
+        element: <ManageSpots /> // Render ManageSpots component
       }
       // Add other routes here
     ]

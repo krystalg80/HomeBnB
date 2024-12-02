@@ -1,0 +1,60 @@
+.manage-spots-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.manage-spots-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.spot-list {
+  list-style: none;
+  padding: 0;
+}
+
+.spot-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.spot-info {
+  flex-grow: 1;
+}
+
+.spot-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button,
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #ff385c;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #e63950;
+}

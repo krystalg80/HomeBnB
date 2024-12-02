@@ -17,6 +17,7 @@ function CreateSpot() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [imageUrl, setImageUrl] = useState(''); // New state for image URL
   const [errors, setErrors] = useState({});
   const [csrfToken, setCsrfToken] = useState('');
 
@@ -72,6 +73,28 @@ function CreateSpot() {
       }
 
       const newSpot = await response.json();
+
+      // Add image to the spot
+      if (imageUrl) {
+        const imageResponse = await fetch(`/api/spots/${newSpot.id}/images`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Include JWT token
+            'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+          },
+          body: JSON.stringify({
+            url: imageUrl,
+            preview: true
+          }),
+        });
+
+        if (!imageResponse.ok) {
+          const imageErrorData = await imageResponse.json();
+          throw new Error(imageErrorData.message || 'Failed to add image');
+        }
+      }
+
       navigate(`/spots/${newSpot.id}`);
       closeModal(); // Close the modal after creating the spot
     } catch (err) {
@@ -165,6 +188,14 @@ function CreateSpot() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
+          />
+        </label>
+        <label>
+          Image URL
+          <input
+            type="text"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
           />
         </label>
         <button type="submit" className="create-spot-button" disabled={isButtonDisabled}>Create Spot</button>
