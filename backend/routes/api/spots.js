@@ -6,6 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const Sequelize = require('sequelize');
 
+
 const validateCreateSpot = [
   check('address')
     .notEmpty()

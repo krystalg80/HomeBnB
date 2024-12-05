@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './SpotDetails.css';
+import { csrfFetch } from '../../store/csrf';
 
 function SpotDetails() {
   const { spotId } = useParams();
@@ -18,7 +19,7 @@ function SpotDetails() {
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        const response = await fetch('/api/csrf/restore', { credentials: 'include' });
+        const response = await csrfFetch('/api/csrf/restore', { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           setCsrfToken(data['XSRF-Token']); // Assuming the backend returns the CSRF token in this format
@@ -117,7 +118,9 @@ function SpotDetails() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    const token = localStorage.getItem('token');  // Get JWT token from localStorage
+
+    
+    const token = sessionUser ? 'authenticated' : null;
 
     if (!token) {
       console.error('No authentication token found');
