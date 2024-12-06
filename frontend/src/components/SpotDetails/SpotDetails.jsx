@@ -156,7 +156,7 @@ function SpotDetails() {
 
   // Calculate average rating and review count
   const averageRating = reviews.length > 0
-    ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviews.length).toFixed(2)
+    ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviews.length).toFixed(1)
     : 'New';
   const reviewCount = reviews.length;
 
@@ -222,7 +222,8 @@ function SpotDetails() {
           <ul>
             {reviews.map((review) => (
               <li key={review.id}>
-                <p><strong>{review.User?.firstName || 'Unknown'}</strong> - {new Date(review.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                <p><strong>{review.User?.firstName || 'Unknown'}</strong></p>
+                <p style={{fontSize: '14px'}}>{new Date(review.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                 <p>{review.review}</p>
                 <p>Rating: {review.stars} ⭐</p>
                 {sessionUser && sessionUser.id === review.userId && (
