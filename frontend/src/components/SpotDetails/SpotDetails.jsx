@@ -16,13 +16,17 @@ function SpotDetails() {
   const sessionUser = useSelector(state => state.session.user);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
+  // Modal state for confirmation before deleting a review
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
+
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
         const response = await csrfFetch('/api/csrf/restore', { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
-          setCsrfToken(data['XSRF-Token']); // Assuming the backend returns the CSRF token in this format
+          setCsrfToken(data['XSRF-Token']);
         } else {
           console.error('Failed to fetch CSRF token:', response.status);
         }
@@ -32,23 +36,22 @@ function SpotDetails() {
     };
 
     fetchCsrfToken();
-  }, []);  // Empty dependency array to run only once
+  }, []);
 
   useEffect(() => {
-    // Fetch spot details
-    const token = localStorage.getItem('token');  // Assuming you're storing the JWT in localStorage
+    const token = localStorage.getItem('token');
 
     fetch(`/api/spots/${spotId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`, // Include JWT token
-        'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+        'Authorization': `Bearer ${token}`,
+        'X-XSRF-TOKEN': csrfToken,
       },
-      credentials: 'include', // To send cookies with the request if needed
+      credentials: 'include',
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.spot) {
-          setSpot(data.spot); // Update the state with the spot details
+          setSpot(data.spot);
         } else {
           setError('Failed to fetch spot details');
         }
@@ -58,13 +61,12 @@ function SpotDetails() {
         setError('Error fetching spot details');
       });
 
-    // Fetch reviews
     fetch(`/api/spots/${spotId}/reviews`, {
       headers: {
-        'Authorization': `Bearer ${token}`, // Include JWT token
-        'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+        'Authorization': `Bearer ${token}`,
+        'X-XSRF-TOKEN': csrfToken,
       },
-      credentials: 'include', // To send cookies with the request if needed
+      credentials: 'include',
     })
       .then((response) => response.json())
       .then((data) => {
@@ -77,27 +79,26 @@ function SpotDetails() {
       .finally(() => {
         setLoadingReviews(false);
       });
-  }, [spotId, csrfToken]);  // Dependency on spotId and csrfToken to refetch when they change
+  }, [spotId, csrfToken]);
 
   const handleReserveClick = () => {
     alert('Feature coming soon');
   };
 
-
   const handleSubmitReview = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem('token');  // Get JWT token from localStorage
+    const token = localStorage.getItem('token');
 
     try {
       const response = await fetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include JWT token
-          'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+          'Authorization': `Bearer ${token}`,
+          'X-XSRF-TOKEN': csrfToken,
         },
-        credentials: 'include', // To send cookies with the request if needed
+        credentials: 'include',
         body: JSON.stringify({ review: reviewText, stars }),
       });
 
@@ -110,7 +111,7 @@ function SpotDetails() {
       setReviews((prevReviews) => [newReview, ...prevReviews]);
       setReviewText('');
       setStars(0);
-      setShowReviewForm(false); // Close the modal after submitting the review
+      setShowReviewForm(false);
     } catch (err) {
       console.error('Error submitting review:', err);
       alert(err.message);
@@ -118,9 +119,7 @@ function SpotDetails() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-
-    
-    const token = sessionUser ? 'authenticated' : null;
+    const token = sessionUser ? 'authenticated' : null; //changed token to a more redux targeted! bc token wasnt being found
 
     if (!token) {
       console.error('No authentication token found');
@@ -131,8 +130,8 @@ function SpotDetails() {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`, // Include JWT token
-          'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+          'Authorization': `Bearer ${token}`,
+          'X-XSRF-TOKEN': csrfToken,
         },
       });
 
@@ -144,6 +143,14 @@ function SpotDetails() {
       setReviews(reviews.filter(review => review.id !== reviewId));
     } catch (err) {
       console.error('Error deleting review:', err);
+    }
+  };
+
+  // Function to handle confirmation of deletion
+  const handleDeleteReviewConfirmation = async () => {
+    if (reviewToDelete) {
+      await handleDeleteReview(reviewToDelete);
+      setShowConfirmDelete(false); // Close the modal after deletion
     }
   };
 
@@ -219,7 +226,10 @@ function SpotDetails() {
                 <p>{review.review}</p>
                 <p>Rating: {review.stars} ⭐</p>
                 {sessionUser && sessionUser.id === review.userId && (
-                  <button onClick={() => handleDeleteReview(review.id)} className="delete-button">Delete</button>
+                  <button onClick={() => {
+                    setReviewToDelete(review.id);
+                    setShowConfirmDelete(true);
+                  }} className="delete-button">Delete</button>
                 )}
               </li>
             ))}
@@ -250,11 +260,23 @@ function SpotDetails() {
                     </select>
                   </label>
                 </div>
-                <button type="submit" disabled={reviewText.length < 10 || stars === 0}>Submit Your Review</button>
+                <button type="submit" disabled={reviewText.length === 0 || stars === 0}>Submit Review</button>
+                <button type="button" onClick={() => setShowReviewForm(false)}>Cancel</button>
               </form>
-              <button onClick={() => setShowReviewForm(false)}>Close</button>
             </div>
           </div>
+        )}
+
+        {/* Confirmation Modal for Review Deletion */}
+        {showConfirmDelete && (
+          <div className="modal-overlay">
+          <div className="modal-content">
+           <h3 style={{fontSize: '24px', fontWeight: 'normal'}}>Confirm Delete</h3>
+           <h3 style={{fontSize: '18px', fontWeight: 'normal'}}>Are you sure you want to delete this review?</h3>
+           <button onClick={handleDeleteReviewConfirmation}>Yes (Delete Review)</button>
+            <button onClick={() => setShowConfirmDelete(false)}>No (Keep Review)</button>
+          </div>
+         </div>
         )}
       </div>
     </div>
