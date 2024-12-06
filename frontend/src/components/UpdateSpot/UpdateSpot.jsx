@@ -44,15 +44,16 @@ function UpdateSpot() {
         const response = await fetch(`/api/spots/${spotId}`);
         if (response.ok) {
           const data = await response.json();
-          setAddress(data.address || '');
-          setCity(data.city || '');
-          setState(data.state || '');
-          setCountry(data.country || '');
-          setLat(data.lat || '');
-          setLng(data.lng || '');
-          setName(data.name || '');
-          setDescription(data.description || '');
-          setPrice(data.price || '');
+          setAddress(data.address);
+          setCity(data.city );
+          setState(data.state);
+          setCountry(data.country);
+          setLat(data.lat);
+          setLng(data.lng);
+          setName(data.name);
+          setDescription(data.description);
+          setPrice(data.price);
+          setImageUrl(data.previewImage); // Set image URL if it exists
         } else {
           console.error('Failed to fetch spot details:', response.status);
         }

@@ -210,6 +210,16 @@ function SpotDetails() {
 
       {/* Reviews Section */}
       <div className="reviews-section">
+      <div className="review-summary">
+                <span className="star-icon">★</span>
+                <span>{averageRating}</span>
+                {reviewCount > 0 && (
+                  <>
+                    <span> · </span>
+                    <span>{reviewCount} {reviewCount === 1 ? 'Review' : 'Reviews'}</span>
+                  </>
+                )}
+              </div>
         <h2>Reviews</h2>
         {sessionUser && !userHasPostedReview && sessionUser.id !== spot.ownerId && (
           <button onClick={() => setShowReviewForm(true)}>Post Your Review</button>
