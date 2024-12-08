@@ -5,6 +5,7 @@ const cors = require('cors');
 const csurf = require('csurf');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const path = require('path'); // Add this to resolve paths for static assets
 const { ValidationError } = require('sequelize');
 
 const { environment } = require('./config');
@@ -18,17 +19,16 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 
-
 // Security Middleware
 if (!isProduction) {
-  // enable cors only in development
+  // Enable CORS only in development
   app.use(cors());
 }
 
-// helmet helps set a variety of headers to better secure your app
+// Helmet helps set a variety of headers to better secure your app
 app.use(
   helmet.crossOriginResourcePolicy({
-    policy: "cross-origin"
+    policy: 'cross-origin',
   })
 );
 
@@ -37,26 +37,38 @@ app.use(
   csurf({
     cookie: {
       secure: isProduction,
-      sameSite: isProduction && "Lax",
-      httpOnly: true
-    }
+      sameSite: isProduction && 'Lax',
+      httpOnly: true,
+    },
   })
 );
 
-app.use(routes); // Connect all the routes
+// Serve static files from the React build folder in production
+if (isProduction) {
+  const buildPath = path.join(__dirname, '../frontend/dist'); // Path to the `dist` folder
+  app.use(express.static(buildPath)); // Serve static files from `dist`
 
-// Catch unhandled requests and forward to error handler.
+  // Handle React routing (fallback to index.html for unknown routes)
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(buildPath, 'index.html')); // Send `index.html`
+  });
+}
+
+// Connect all the routes
+app.use(routes);
+
+// Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
-  err.title = "Resource Not Found";
+  err.title = 'Resource Not Found';
   err.errors = { message: "The requested resource couldn't be found." };
   err.status = 404;
   next(err);
 });
 
-// Process sequelize errors
+// Process Sequelize errors
 app.use((err, _req, _res, next) => {
-  // check if error is a Sequelize error:
+  // Check if error is a Sequelize error
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {
@@ -76,7 +88,7 @@ app.use((err, _req, res, _next) => {
     title: err.title || 'Server Error',
     message: err.message,
     errors: err.errors,
-    stack: isProduction ? null : err.stack
+    stack: isProduction ? null : err.stack,
   });
 });
 
