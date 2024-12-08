@@ -36,7 +36,7 @@ function UpdateSpot() {
     };
 
     fetchCsrfToken();
-  }, []);  // Empty dependency array to run only once
+  }, []);
 
   useEffect(() => {
     const fetchSpotDetails = async () => {
@@ -44,16 +44,16 @@ function UpdateSpot() {
         const response = await fetch(`/api/spots/${spotId}`);
         if (response.ok) {
           const data = await response.json();
-          setAddress(data.address);
-          setCity(data.city );
-          setState(data.state);
-          setCountry(data.country);
-          setLat(data.lat);
-          setLng(data.lng);
-          setName(data.name);
-          setDescription(data.description);
-          setPrice(data.price);
-          setImageUrl(data.previewImage); // Set image URL if it exists
+          setAddress(data.address || '');
+          setCity(data.city || '');
+          setState(data.state || '');
+          setCountry(data.country || '');
+          setLat(data.lat || '');
+          setLng(data.lng || '');
+          setName(data.name || '');
+          setDescription(data.description || '');
+          setPrice(data.price || '');
+          setImageUrl(data.previewImage || ''); // Assuming the backend returns a previewImage field
         } else {
           console.error('Failed to fetch spot details:', response.status);
         }
@@ -69,69 +69,46 @@ function UpdateSpot() {
     e.preventDefault();
     setErrors({});
 
-    const token = localStorage.getItem('token');  // Get JWT token from localStorage
+    const spotData = {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      previewImage: imageUrl, // Assuming the backend expects a previewImage field
+    };
 
     try {
       const response = await fetch(`/api/spots/${spotId}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include JWT token
-          'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
+          'X-XSRF-TOKEN': csrfToken,
         },
-        body: JSON.stringify({
-          address,
-          city,
-          state,
-          country,
-          lat,
-          lng,
-          name,
-          description,
-          price
-        }),
+        body: JSON.stringify(spotData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        setErrors(errorData.errors || {});
         throw new Error(errorData.message || 'Failed to update spot');
       }
 
-      // Add image to the spot
-      if (imageUrl) {
-        const imageResponse = await fetch(`/api/spots/${spotId}/images`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Include JWT token
-            'X-XSRF-TOKEN': csrfToken,         // Include CSRF token
-          },
-          body: JSON.stringify({
-            url: imageUrl,
-            preview: true
-          }),
-        });
-
-        if (!imageResponse.ok) {
-          const imageErrorData = await imageResponse.json();
-          throw new Error(imageErrorData.message || 'Failed to add image');
-        }
-      }
-
+      closeModal();
       navigate(`/spots/${spotId}`);
-      closeModal(); // Close the modal after updating the spot
-    } catch (err) {
-      console.error('Error updating spot:', err);
-      setErrors({ general: err.message });
+    } catch (error) {
+      console.error('Error updating spot:', error);
     }
   };
-
-  const isButtonDisabled = !address || !city || !state || !country || !lat || !lng || !name || !description || !price;
 
   return (
     <div className="update-spot-container">
       <form onSubmit={handleSubmit} className="update-spot-form">
-        <h2>Update Spot</h2>
+        <h2>Update your Spot</h2>
         {errors.general && <p className="error-text">{errors.general}</p>}
         <label>
           Address
@@ -214,14 +191,21 @@ function UpdateSpot() {
           />
         </label>
         <label>
-          Image URL
+          Image URL (optional)
           <input
             type="text"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
           />
         </label>
-        <button type="submit" className="update-spot-button" disabled={isButtonDisabled}>Update Spot</button>
+        {Object.keys(errors).length > 0 && (
+          <div className="errors">
+            {Object.values(errors).map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
+        <button type="submit">Update your Spot</button>
       </form>
     </div>
   );
