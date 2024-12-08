@@ -43,6 +43,9 @@ app.use(
   })
 );
 
+// Connect all the routes
+app.use(routes);
+
 // Serve static files from the React build folder in production
 if (isProduction) {
   const buildPath = path.join(__dirname, '../frontend/dist'); // Path to the `dist` folder
@@ -54,8 +57,7 @@ if (isProduction) {
   });
 }
 
-// Connect all the routes
-app.use(routes);
+
 
 // Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {
